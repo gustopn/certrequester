@@ -4,6 +4,14 @@ use strict;
 use utf8;
 use Env;
 use warnings;
+use File::Basename;
+
+my @scriptpath = split(/\//, dirname(__FILE__));
+pop @scriptpath;
+pop @scriptpath;
+push @scriptpath, "work";
+push @scriptpath, "zonefiles";
+my $zonefiledirpath = join("/", @scriptpath);
 
 my $validationstring = $ENV{CERTBOT_VALIDATION};
 my $validationdomain = $ENV{CERTBOT_DOMAIN};
@@ -15,7 +23,9 @@ if (not $validationdomain) {
   die "ERROR: No domain string found!";
 }
 
-my $zonefiledirpath = $ENV{zoneprefix};
+if ($ENV{zoneprefix}) {
+  $zonefiledirpath = $ENV{zoneprefix}; 
+}
 if (not $zonefiledirpath || -d $zonefiledirpath) {
   die "ERROR: No zone files prefix provided or is not a directory!";
 }
