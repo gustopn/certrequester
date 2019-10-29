@@ -37,17 +37,24 @@ if (not -f $zonefilepath || -z $zonefilepath) {
 }
 
 my @newzonefilecontent;
+my $oldzonefilepath = $zonefilepath . "-" . time;
+
 open(ZONEFILE, "< :encoding(UTF-8)", $zonefilepath);
 while (my $line = <ZONEFILE>) {
   if ($line =~ /^_acme-challenge/) {
-    print "WARNING: A $line found, this should NOT happen!";
+    if (-f $oldzonefilepath) {
+      print "WARNING: Recognized a re-run, quitting gracefully\n";
+      # TODO: Rewrite this to a break-loop having close only once and then check for a variable of second-run, outputting message.
+      close(ZONEFILE);
+      exit 0;
+    }
+    print "WARNING: A $line found, this should NOT happen!\n";
   } else {
     push @newzonefilecontent, $line;
   }
 }
 close(ZONEFILE);
 
-my $oldzonefilepath = $zonefilepath . "-" . time;
 if (not -e $oldzonefilepath) {
   rename $zonefilepath, $oldzonefilepath;
 } else {
