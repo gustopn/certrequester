@@ -47,13 +47,26 @@ while (my $line = <ZONEFILE>) {
 }
 close(ZONEFILE);
 
+my $oldzonefilepath = $zonefilepath . "-" . time;
+if (not -e $oldzonefilepath) {
+  rename $zonefilepath, $oldzonefilepath;
+} else {
+  die "ERROR: Could not move old zonefile $zonefilepath away!";
+}
 
 # generate DNS TXT verification string
-my $dnsverifytxt = "_acme-challenge  60 IN TXT $validationstring";
+my $dnsverifytxt = "_acme-challenge  60 IN TXT " . $validationstring . "\n";
 print "$dnsverifytxt \ngenerated and will be appended to the end of new zone file\n";
 
-# loop through newly created content
-foreach my $nline (@newzonefilecontent) {
-  print $nline;
+if (-e $zonefilepath) {
+  die "ERROR: We still see our old zonefile path!";
 }
-print $dnsverifytxt;
+
+# create a new zone file
+open(ZONEFILE, "> :encoding(UTF-8)", $zonefilepath);
+foreach my $nline (@newzonefilecontent) {
+  print ZONEFILE $nline;
+}
+print ZONEFILE $dnsverifytxt;
+close(ZONEFILE);
+
