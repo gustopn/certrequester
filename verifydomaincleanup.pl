@@ -45,7 +45,8 @@ close(ZONEFILE);
 if (not -e $oldzonefilepath) {
   rename $zonefilepath, $oldzonefilepath;
 } else {
-  die "ERROR: Could not move old zonefile $zonefilepath away!";
+  print "WARNING: Could not move old zonefile $zonefilepath away, possibly a re-run!\n";
+  exit 0;
 }
 
 if (-e $zonefilepath) {
