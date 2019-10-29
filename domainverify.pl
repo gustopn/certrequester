@@ -84,5 +84,6 @@ push @scriptpath, "autodnssec";
 push @scriptpath, "resign_dnssec.sh";
 my $updatescript = join("/", @scriptpath);
 if (-x $updatescript && -f $updatescript) {
-  system($updatescript, "-u")
+  system($updatescript, "-u");
+  sleep 30;
 }
