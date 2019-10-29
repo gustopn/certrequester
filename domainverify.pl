@@ -30,7 +30,7 @@ if (not $zonefiledirpath || -d $zonefiledirpath) {
   die "ERROR: No zone files prefix provided or is not a directory!";
 }
 
-my $zonefilepath = $zonefiledirpath + $validationdomain + ".zone";
+my $zonefilepath = $zonefiledirpath . $validationdomain . ".zone";
 if (not -f $zonefilepath || -z $zonefilepath) {
   die "ERROR: Zone file not found or empty!";
 }
