@@ -36,8 +36,24 @@ if (not -f $zonefilepath || -z $zonefilepath) {
   die "ERROR: Zone file $zonefilepath not found or empty!";
 }
 
+my @newzonefilecontent;
 open(ZONEFILE, "< :encoding(UTF-8)", $zonefilepath);
 while (my $line = <ZONEFILE>) {
-  print $line;
+  if ($line =~ /^_acme-challenge/) {
+    print "WARNING: A $line found, this should NOT happen!";
+  } else {
+    push @newzonefilecontent, $line;
+  }
 }
 close(ZONEFILE);
+
+
+# generate DNS TXT verification string
+my $dnsverifytxt = "_acme-challenge  60 IN TXT $validationstring";
+print "$dnsverifytxt \ngenerated and will be appended to the end of new zone file\n";
+
+# loop through newly created content
+foreach my $nline (@newzonefilecontent) {
+  print $nline;
+}
+print $dnsverifytxt;
