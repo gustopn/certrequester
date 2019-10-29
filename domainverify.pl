@@ -32,7 +32,7 @@ if (not $zonefiledirpath || -d $zonefiledirpath) {
 
 my $zonefilepath = $zonefiledirpath . $validationdomain . ".zone";
 if (not -f $zonefilepath || -z $zonefilepath) {
-  die "ERROR: Zone file not found or empty!";
+  die "ERROR: Zone file $zonefilepath not found or empty!";
 }
 
 open(ZONEFILE, "< :encoding(UTF-8)", $zonefilepath);
