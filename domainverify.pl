@@ -6,6 +6,7 @@ use Env;
 use warnings;
 use File::Basename;
 
+# This is a temporary hardcoded quickfix, it should be removed ASAP
 my @scriptpath = split(/\//, dirname(__FILE__));
 pop @scriptpath;
 pop @scriptpath;
