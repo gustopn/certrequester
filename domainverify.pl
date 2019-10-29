@@ -37,6 +37,6 @@ if (not -f $zonefilepath || -z $zonefilepath) {
 
 open(ZONEFILE, "< :encoding(UTF-8)", $zonefilepath);
 while (my $line = <ZONEFILE>) {
-  print $line . "\n";
+  print $line;
 }
 close(ZONEFILE);
