@@ -29,8 +29,34 @@ if (not -f $zonefilepath || -z $zonefilepath) {
   die "ERROR: Zone file $zonefilepath not found or empty!";
 }
 
+my @newzonefilecontent;
+my $oldzonefilepath = $zonefilepath . "-" . time;
+
 open(ZONEFILE, "< :encoding(UTF-8)", $zonefilepath);
 while (my $line = <ZONEFILE>) {
-  print $line;
+  if ($line =~ /^_acme-challenge/) {
+    print "cleaning $line";
+  } else {
+    push @newzonefilecontent, $line;
+  }
 }
 close(ZONEFILE);
+
+if (not -e $oldzonefilepath) {
+  rename $zonefilepath, $oldzonefilepath;
+} else {
+  die "ERROR: Could not move old zonefile $zonefilepath away!";
+}
+
+if (-e $zonefilepath) {
+  die "ERROR: We still see our old zonefile path!";
+}
+
+# create a new zone file
+open(ZONEFILE, "> :encoding(UTF-8)", $zonefilepath);
+foreach my $nline (@newzonefilecontent) {
+  print ZONEFILE $nline;
+}
+close(ZONEFILE);
+
+
