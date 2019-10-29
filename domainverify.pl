@@ -77,3 +77,12 @@ foreach my $nline (@newzonefilecontent) {
 print ZONEFILE $dnsverifytxt;
 close(ZONEFILE);
 
+# just get it over with
+@scriptpath = split(/\//, dirname(__FILE__));
+pop @scriptpath;
+push @scriptpath, "autodnssec";
+push @scriptpath, "resign_dnssec.sh";
+my $updatescript = join("/", @scriptpath);
+if (-x $updatescript && -f $updatescript) {
+  system($updatescript, "-u")
+}
